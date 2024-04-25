@@ -79,22 +79,23 @@ HashMap * createMap(long capacity) {
 
 /*Implemente la función void eraseMap(HashMap * map, char * key). Está función elimina el dato correspondiente a la clave key. Para hacerlo debe buscar el dato y luego marcarlo para que no sea válido. No elimine el par, sólo invalídelo asignando NULL a la clave (pair->key=NULL). Recuerde actualizar la variable size.*/
 void eraseMap(HashMap * map,  char * key) {    
-  HashMap *mapa = (HashMap*)malloc(sizeof(HashMap)); 
-  {
-    free(mapa);
-    return NULL;
-  }
-  mapa->buckets = (Pair**)calloc(capacity, sizeof(Pair*));
-  if(mapa->buckets == NULL)
-  {
-    free(mapa);
-    return NULL;
-  }
-  mapa->size = 0;
-  mapa->current = -1;
-  mapa->capacity = capacity;
+  long posicion = hash(key, map->capacity);
+  long posicionOriginal = posicion;
 
-  return mapa;
+  while(map->buckets[posicion]!=NULL && map->buckets[posicion]->key != NULL)
+  {
+    if(strcmp(map->buckets[posicion]->key, key) == 0)
+    {
+      map->buckets[posicion]->key = NULL;
+      map->size--;
+    }
+    posicion = (posicion +1) % map->capacity;
+    if(posicion == posicionOriginal)
+    {
+      return;
+    }
+  }
+  return;
 }
 
 Pair * searchMap(HashMap * map,  char * key) {   
