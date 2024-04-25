@@ -40,8 +40,7 @@ int is_equal(void* key1, void* key2){
 
 
 void insertMap(HashMap * map, char * key, void * value) {
-
-
+  
 }
 
 void enlarge(HashMap * map) {
@@ -50,10 +49,16 @@ void enlarge(HashMap * map) {
 
 }
 
-
+/* Implemente la función createMap en el archivo hashmap.c. Esta función crea una variable de tipo HashMap, inicializa el arreglo de buckets con casillas nulas, inicializa el resto de variables y retorna el mapa. Inicialice el índice current a -1.*/
 HashMap * createMap(long capacity) {
-
-    return NULL;
+    HashMap * map = (HashMap *) malloc(sizeof(HashMap));
+  
+    map->buckets = (Pair **) calloc(capacity, sizeof(Pair *));
+    map->size = 0;
+    map->capacity = capacity;
+    map->current = -1;
+  
+    return map;
 }
 
 void eraseMap(HashMap * map,  char * key) {    
