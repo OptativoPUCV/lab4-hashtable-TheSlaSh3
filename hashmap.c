@@ -61,9 +61,22 @@ void insertMap(HashMap * map, char * key, void * value) {
 }
 
 void enlarge(HashMap * map) {
-    enlarge_called = 1; //no borrar (testing purposes)
-  
+  enlarge_called = 1; //no borrar (testing purposes)
+  Pair** old = map->buckets;
 
+  map->capacity *= 2;
+  map ->buckets = (Pair**)malloc(map->capacity * sizeof(Pair*));
+  map->size = 0;
+
+  for(long i = 0; i < map->capacity / 2; i++)
+  {
+    if(old[i] != NULL)
+    {
+      insertMap(map, old[i]->key, old[i]->value);
+      free(old[i]);
+    }
+  }
+  free(old);
 }
 
 HashMap * createMap(long capacity) {
@@ -77,7 +90,6 @@ HashMap * createMap(long capacity) {
     return map;
 }
 
-/*Implemente la función void eraseMap(HashMap * map, char * key). Está función elimina el dato correspondiente a la clave key. Para hacerlo debe buscar el dato y luego marcarlo para que no sea válido. No elimine el par, sólo invalídelo asignando NULL a la clave (pair->key=NULL). Recuerde actualizar la variable size.*/
 void eraseMap(HashMap * map,  char * key) {    
   long posicion = hash(key, map->capacity);
   long posicionOriginal = posicion;
