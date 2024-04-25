@@ -38,9 +38,35 @@ int is_equal(void* key1, void* key2){
     return 0;
 }
 
+/*Implemente la función void insertMap(HashMap * map, char * key, void * value). Esta función inserta un nuevo dato (key,value) en el mapa y actualiza el índice current a esa posición. Recuerde que para insertar un par (clave,valor) debe:
 
+  a - Aplicar la función hash a la clave para obtener la posición donde debería insertar el nuevo par
+
+  b - Si la casilla se encuentra ocupada, avance hasta una casilla disponible (método de resolución de colisiones). Una casilla disponible es una casilla nula, pero también una que tenga un par inválido (key==NULL).
+
+  c - Ingrese el par en la casilla que encontró.
+
+  No inserte claves repetidas. Recuerde que el arreglo es circular. Recuerde actualizar la variable size.*/
 void insertMap(HashMap * map, char * key, void * value) {
-  
+  long posicion = hash(key, map->capacity);
+  long posicionOriginal = posicion;
+
+  while(map->buckets[posicion]!= NULL && map->buckets[posicion]->key != NULL)
+  {
+    if(strcmp(map->buckets[posicion]->key, key) == 0)
+    {
+      return;
+    }
+    posicion = (posicion + 1) % map->capacity;
+    if(posicion == posicionOriginal)
+    {
+      return;
+    } 
+  }
+  map->buckets[posicion] = createPair(key,value);
+  map->current = posicion;
+
+  map->size++;
 }
 
 void enlarge(HashMap * map) {
@@ -49,7 +75,6 @@ void enlarge(HashMap * map) {
 
 }
 
-/* Implemente la función createMap en el archivo hashmap.c. Esta función crea una variable de tipo HashMap, inicializa el arreglo de buckets con casillas nulas, inicializa el resto de variables y retorna el mapa. Inicialice el índice current a -1.*/
 HashMap * createMap(long capacity) {
     HashMap * map = (HashMap *) malloc(sizeof(HashMap));
   
